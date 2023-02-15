@@ -25,10 +25,28 @@ const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, inval
 
 // Add your functions below:
 
+// const myT = [4, 5, 3, 9, 6, 8, 9, 8, 8, 7, 7, 0, 5, 7, 9, 8]
+// console.log(myT);
 
+const validateCred = (arr) => {
+    let luhnArr = [];
+    for (let i = arr.length - 1; i >= 0; i--) {
+        if (i % 2 === 0) {
+            arr[i] *= 2;
+            if (arr[i] > 9) {
+                arr[i] -= 9;
+            };
+        };
+        luhnArr.unshift(arr[i]);
+    };
+    console.log(...luhnArr);
+    console.log(`Sum: ${luhnArr.reduce((acc, currVal)=> acc + currVal)}`);
+    return (luhnArr.reduce((acc, currVal)=> acc + currVal) %10 === 0) ? true : false;
+};
 
+console.log(validateCred(valid1));
+// console.log(...validateCred(valid1));
+// console.log(validateCred(valid3));
+// console.log(validateCred(mystery3));
 
-
-
-
-
+// Test CLI again
