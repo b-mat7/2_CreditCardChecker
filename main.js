@@ -25,28 +25,44 @@ const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, inval
 
 // Add your functions below:
 
-// const myT = [4, 5, 3, 9, 6, 8, 9, 8, 8, 7, 7, 0, 5, 7, 9, 8]
-// console.log(myT);
-
-const validateCred = (arr) => {
+// Check if a CreditCard is legit 
+const validateCred = (cardNr) => {
     let luhnArr = [];
-    for (let i = arr.length - 1; i >= 0; i--) {
+
+    for (let i = cardNr.length - 1; i >= 0; i--) {
         if (i % 2 === 0) {
-            arr[i] *= 2;
-            if (arr[i] > 9) {
-                arr[i] -= 9;
+            cardNr[i] *= 2;
+            if (cardNr[i] > 9) {
+                cardNr[i] -= 9;
             };
         };
-        luhnArr.unshift(arr[i]);
+        luhnArr.unshift(cardNr[i]);
     };
-    console.log(...luhnArr);
-    console.log(`Sum: ${luhnArr.reduce((acc, currVal)=> acc + currVal)}`);
-    return (luhnArr.reduce((acc, currVal)=> acc + currVal) %10 === 0) ? true : false;
+    // Return value for further processing
+    return (luhnArr.reduce((acc, currVal) => acc + currVal) % 10 === 0) ? true : false;
+       
+    // Console + return for debugging
+    // console.log(...luhnArr);
+    // return(`Sum:${luhnArr.reduce((acc, currVal) => acc + currVal)} ` + `--> Modulo10:${(luhnArr.reduce((acc, currVal) => acc + currVal) %10 === 0) ? true : false}`);
 };
 
-console.log(validateCred(valid1));
-// console.log(...validateCred(valid1));
-// console.log(validateCred(valid3));
-// console.log(validateCred(mystery3));
+// Check a batch (nested arrays) of cards and return the invalid cards as an array
+const findInvalidCards = (listofCards) => {
+    let invalidCards = [];
+    let validCards = [];
 
-// Test CLI again
+    for (let i = 0; i < listofCards.length; i++) {
+        if (validateCred(listofCards[i]) === false) {
+            invalidCards.push(listofCards[i]);
+        }; 
+        validCards.push(listofCards[i]);
+    };
+    // Return value for processing
+    return invalidCards;
+
+    // Return value for debugging
+    // return [invalidCards, validCards];
+};
+
+// console.log(validateCred(valid1));   // Test validateCred()
+console.log(findInvalidCards(batch));   // Test findInvalidCards()
