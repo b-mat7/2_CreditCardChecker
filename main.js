@@ -28,19 +28,20 @@ const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, inval
 // Check if a CreditCard is legit 
 const validateCred = (cardNr) => {
     let luhnArr = [];
+    let cardNrCopy = cardNr.slice();
 
-    for (let i = cardNr.length - 1; i >= 0; i--) {
+    for (let i = cardNrCopy.length - 1; i >= 0; i--) {
         if (i % 2 === 0) {
-            cardNr[i] *= 2;
-            if (cardNr[i] > 9) {
-                cardNr[i] -= 9;
+            cardNrCopy[i] *= 2;
+            if (cardNrCopy[i] > 9) {
+                cardNrCopy[i] -= 9;
             };
         };
-        luhnArr.unshift(cardNr[i]);
+        luhnArr.unshift(cardNrCopy[i]);
     };
     // Return value for further processing
     return (luhnArr.reduce((acc, currVal) => acc + currVal) % 10 === 0) ? true : false;
-       
+
     // Console + return for debugging
     // console.log(...luhnArr);
     // return(`Sum:${luhnArr.reduce((acc, currVal) => acc + currVal)} ` + `--> Modulo10:${(luhnArr.reduce((acc, currVal) => acc + currVal) %10 === 0) ? true : false}`);
@@ -54,7 +55,7 @@ const findInvalidCards = (listofCards) => {
     for (let i = 0; i < listofCards.length; i++) {
         if (validateCred(listofCards[i]) === false) {
             invalidCards.push(listofCards[i]);
-        }; 
+        };
         validCards.push(listofCards[i]);
     };
     // Return value for processing
@@ -64,5 +65,30 @@ const findInvalidCards = (listofCards) => {
     // return [invalidCards, validCards];
 };
 
-// console.log(validateCred(valid1));   // Test validateCred()
-console.log(findInvalidCards(batch));   // Test findInvalidCards()
+// Check which companies issued the invalid Cards (also a nested array)
+const idInvalidCardCompanies = (listOfCards) => {
+    let cardIssuers = [];
+    for (let i = 0; i < listOfCards.length; i++) {
+        switch (listOfCards[i][0]) {
+            case 3:
+                if (cardIssuers.indexOf('Amex') === -1) { cardIssuers.push('Amex') };
+                break;
+            case 4:
+                if (cardIssuers.indexOf('Visa') === -1) { cardIssuers.push('Visa') };
+                break;
+            case 5:
+                if (cardIssuers.indexOf('Mastercard') === -1) { cardIssuers.push('Mastercard') };
+                break;
+            case 6:
+                if (cardIssuers.indexOf('Discover') === -1) { cardIssuers.push('Discover') };
+                break;
+        };
+    };
+    // Return value for processing
+    return (cardIssuers.length === 0) ? 'Company not found' : cardIssuers;
+
+};
+
+// console.log(validateCred(valid1));                           // Test validateCred()
+console.log(findInvalidCards(batch));                           // Test findInvalidCards()
+console.log(idInvalidCardCompanies(findInvalidCards(batch)));   // Test idInvalidCardCompanies()
